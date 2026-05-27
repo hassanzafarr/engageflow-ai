@@ -1,11 +1,13 @@
-// Live AI Composer Simulator — intent + length, circular ring fills as mock reply types.
-const { motion: M_co, AnimatePresence: AP_co } = window.Motion;
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ThumbsUp, ThumbsDown, Smile, MessageCircle, Sparkles, Repeat, Settings, Cpu, Send, FileText, Wand, Clock, Linkedin } from './icons.jsx';
+import { SectionHead, Reveal, Pill } from './ui.jsx';
 
 const INTENTS = [
-  { id: 'agree', label: 'Agree',    icon: ThumbsUp,    accent: '#10b981' },
-  { id: 'disagree', label: 'Disagree', icon: ThumbsDown, accent: '#8b5cf6' },
-  { id: 'funny', label: 'Funny',    icon: Smile,        accent: '#fbbf24' },
-  { id: 'question', label: 'Question', icon: MessageCircle, accent: '#60a5fa' },
+  { id: 'agree',    label: 'Agree',    icon: ThumbsUp,       accent: '#10b981' },
+  { id: 'disagree', label: 'Disagree', icon: ThumbsDown,     accent: '#8b5cf6' },
+  { id: 'funny',    label: 'Funny',    icon: Smile,          accent: '#fbbf24' },
+  { id: 'question', label: 'Question', icon: MessageCircle,  accent: '#60a5fa' },
 ];
 
 const LENGTHS = [
@@ -21,7 +23,6 @@ const ORIGINAL_POST = {
   network: 'in',
 };
 
-// Reply templates per intent x length
 const REPLIES = {
   agree: {
     short:  "Specification is the new prompt. The teams who win the next two years are the ones who can write a ticket so clean you could hand it to a junior or a model and get the same result.",
@@ -45,10 +46,10 @@ const REPLIES = {
   }
 };
 
-function Composer() {
+export function Composer() {
   const [intent, setIntent] = React.useState('agree');
   const [length, setLength] = React.useState('medium');
-  const [phase, setPhase] = React.useState('idle'); // idle | generating | done
+  const [phase, setPhase] = React.useState('idle');
   const [typed, setTyped] = React.useState('');
   const [ringProgress, setRingProgress] = React.useState(0);
   const fullReplyRef = React.useRef('');
@@ -72,7 +73,6 @@ function Composer() {
     const full = REPLIES[intent][length];
     fullReplyRef.current = full;
 
-    // Ring animates 0 -> targetRing over ~900ms (drawing arc)
     const start = performance.now();
     const DURATION = 900;
     ringTimerRef.current = setInterval(() => {
@@ -82,7 +82,6 @@ function Composer() {
       if (t >= 1) { clearInterval(ringTimerRef.current); ringTimerRef.current = null; }
     }, 16);
 
-    // After ring completes, type out the reply
     setTimeout(() => {
       let i = 0;
       typeTimerRef.current = setInterval(() => {
@@ -101,12 +100,10 @@ function Composer() {
 
   React.useEffect(() => () => clearTimers(), []);
 
-  // Reset typed reply when intent/length change while idle
   React.useEffect(() => {
     if (phase === 'done') { setPhase('idle'); setTyped(''); setRingProgress(0); }
   }, [intent, length]);
 
-  // Ring SVG params
   const R = 70;
   const C = 2 * Math.PI * R;
 
@@ -121,7 +118,6 @@ function Composer() {
 
         <Reveal delay={0.18} className="mt-12">
           <div className="grid lg:grid-cols-12 gap-6 items-start">
-            {/* Left: source post + controls */}
             <div className="lg:col-span-5 space-y-4">
               <div className="glass rounded-2xl p-5">
                 <div className="text-[10px] uppercase tracking-[0.14em] text-white/40 mb-3 font-semibold">Replying to</div>
@@ -147,17 +143,12 @@ function Composer() {
                     const Ic = it.icon;
                     const active = intent === it.id;
                     return (
-                      <button key={it.id} onClick={() => setIntent(it.id)}
-                        className="relative">
+                      <button key={it.id} onClick={() => setIntent(it.id)} className="relative">
                         {active && (
-                          <M_co.span layoutId="intent-active"
+                          <motion.span layoutId="intent-active"
                             transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                             className="absolute inset-0 rounded-xl border"
-                            style={{
-                              borderColor: it.accent + '66',
-                              background: it.accent + '14',
-                              boxShadow: `0 0 0 1px ${it.accent}55, 0 8px 28px -10px ${it.accent}99`,
-                            }}/>
+                            style={{ borderColor: it.accent + '66', background: it.accent + '14', boxShadow: `0 0 0 1px ${it.accent}55, 0 8px 28px -10px ${it.accent}99` }}/>
                         )}
                         <span className={`relative flex flex-col items-center gap-1.5 py-2.5 rounded-xl border transition
                           ${active ? 'border-transparent' : 'border-white/[0.07] bg-white/[0.02] hover:bg-white/[0.04]'}`}>
@@ -191,10 +182,8 @@ function Composer() {
                     onClick={phase === 'done' ? reset : generate}
                     disabled={phase === 'generating'}
                     className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold transition
-                      ${phase === 'generating'
-                        ? 'bg-white/[0.04] text-white/40 cursor-wait'
-                        : phase === 'done'
-                        ? 'bg-white/10 text-white/85 hover:bg-white/15'
+                      ${phase === 'generating' ? 'bg-white/[0.04] text-white/40 cursor-wait'
+                        : phase === 'done' ? 'bg-white/10 text-white/85 hover:bg-white/15'
                         : 'bg-em-500 text-ink-950 hover:bg-em-400 shadow-[0_8px_28px_-8px_rgba(16,185,129,.6)]'}`}>
                     {phase === 'generating' ? <><Cpu size={13} className="animate-spin"/> Drafting</> :
                      phase === 'done' ? <><Repeat size={13}/> Regenerate</> :
@@ -207,10 +196,8 @@ function Composer() {
               </div>
             </div>
 
-            {/* Right: ring + output */}
             <div className="lg:col-span-7">
               <div className="relative glass-strong rounded-2xl p-6 min-h-[520px] overflow-hidden">
-                {/* corner ring */}
                 <div className="absolute top-5 right-5 w-[160px] h-[160px]">
                   <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
                     <defs>
@@ -223,9 +210,7 @@ function Composer() {
                         <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                       </filter>
                     </defs>
-                    {/* track */}
                     <circle cx="100" cy="100" r={R} stroke="rgba(255,255,255,.06)" strokeWidth="2.5" fill="none"/>
-                    {/* tick marks */}
                     {Array.from({ length: 60 }).map((_, i) => {
                       const a = (i / 60) * Math.PI * 2;
                       const x1 = 100 + Math.cos(a) * (R + 8);
@@ -238,14 +223,12 @@ function Composer() {
                                    strokeWidth={i % 5 === 0 ? 1.3 : 0.7}
                                    opacity={passed ? 0.9 : 1}/>;
                     })}
-                    {/* progress arc */}
                     <circle cx="100" cy="100" r={R}
                       stroke="url(#ringGrad)" strokeWidth="4" fill="none" strokeLinecap="round"
                       filter="url(#ringGlow)"
                       strokeDasharray={C}
                       strokeDashoffset={C * (1 - ringProgress)}
                       style={{ transition: 'stroke-dashoffset 80ms linear' }}/>
-                    {/* leading dot */}
                     {ringProgress > 0 && (
                       <circle
                         cx={100 + Math.cos((ringProgress * 2 - 0.5) * Math.PI) * R}
@@ -279,32 +262,30 @@ function Composer() {
                   </div>
                 </div>
 
-                {/* Output */}
                 <div className="mt-2 max-w-[calc(100%-180px)] pr-2">
                   {phase === 'idle' && (
-                    <M_co.div
+                    <motion.div
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                       className="rounded-xl border border-dashed border-white/10 px-4 py-8 text-center text-[13px] text-white/40">
                       Press <span className="text-em-300 font-semibold">Generate reply</span> to see your draft stream in.
-                    </M_co.div>
+                    </motion.div>
                   )}
 
                   {phase !== 'idle' && (
-                    <M_co.div
+                    <motion.div
                       initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
                       className="rounded-xl bg-black/30 border border-white/[0.06] p-4 text-[14px] leading-relaxed text-white/85 min-h-[180px]">
-                      <span className="text-em-300">{`>`}</span>{' '}
+                      <span className="text-em-300">{'>'}</span>{' '}
                       {typed}
                       {phase === 'generating' && (
                         <span className="inline-block w-1.5 h-4 align-text-bottom bg-em-400 ml-0.5 animate-pulse"></span>
                       )}
-                    </M_co.div>
+                    </motion.div>
                   )}
 
-                  {/* action bar */}
-                  <AP_co>
+                  <AnimatePresence>
                     {phase === 'done' && (
-                      <M_co.div
+                      <motion.div
                         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                         transition={{ duration: 0.4 }}
                         className="mt-4 flex flex-wrap items-center gap-2">
@@ -320,9 +301,9 @@ function Composer() {
                         <span className="ml-auto inline-flex items-center gap-1.5 text-[11px] text-white/45 font-mono">
                           <Clock size={11}/> 392ms · Claude Haiku 4.5
                         </span>
-                      </M_co.div>
+                      </motion.div>
                     )}
-                  </AP_co>
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
@@ -332,5 +313,3 @@ function Composer() {
     </section>
   );
 }
-
-window.Composer = Composer;

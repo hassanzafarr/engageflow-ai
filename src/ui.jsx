@@ -1,13 +1,15 @@
-// Small shared UI primitives.
-const { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } = window.Motion;
+import React from 'react';
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
 
-function Reveal({ children, delay = 0, y = 24, className = "", once = true, as: As = motion.div }) {
+export { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useSpring };
+
+export function Reveal({ children, delay = 0, y = 24, className = '', once = true, as: As = motion.div }) {
   return (
     <As
-      initial={{ opacity: 0, y, filter: "blur(6px)" }}
-      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      initial={{ opacity: 0, y, filter: 'blur(6px)' }}
+      whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-      viewport={{ once, margin: "-80px" }}
+      viewport={{ once, margin: '-80px' }}
       className={className}
     >
       {children}
@@ -15,12 +17,12 @@ function Reveal({ children, delay = 0, y = 24, className = "", once = true, as: 
   );
 }
 
-function GlowButton({ children, variant = "em", as: As = "button", className = "", ...rest }) {
-  const palette = variant === "em"
-    ? "bg-em-500 hover:bg-em-400 text-ink-950 shadow-[0_0_0_1px_rgba(110,231,183,.5),0_8px_30px_-4px_rgba(16,185,129,.55),inset_0_1px_0_rgba(255,255,255,.4)]"
-    : variant === "vi"
-    ? "bg-vi-500 hover:bg-vi-400 text-white shadow-[0_0_0_1px_rgba(196,181,253,.5),0_8px_30px_-4px_rgba(139,92,246,.55)]"
-    : "bg-white/5 hover:bg-white/10 text-white border border-white/15";
+export function GlowButton({ children, variant = 'em', as: As = 'button', className = '', ...rest }) {
+  const palette = variant === 'em'
+    ? 'bg-em-500 hover:bg-em-400 text-ink-950 shadow-[0_0_0_1px_rgba(110,231,183,.5),0_8px_30px_-4px_rgba(16,185,129,.55),inset_0_1px_0_rgba(255,255,255,.4)]'
+    : variant === 'vi'
+    ? 'bg-vi-500 hover:bg-vi-400 text-white shadow-[0_0_0_1px_rgba(196,181,253,.5),0_8px_30px_-4px_rgba(139,92,246,.55)]'
+    : 'bg-white/5 hover:bg-white/10 text-white border border-white/15';
   return (
     <As
       className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight transition-all duration-200 active:translate-y-[1px] ${palette} ${className}`}
@@ -31,7 +33,7 @@ function GlowButton({ children, variant = "em", as: As = "button", className = "
   );
 }
 
-function GhostButton({ children, className = "", as: As = "button", ...rest }) {
+export function GhostButton({ children, className = '', as: As = 'button', ...rest }) {
   return (
     <As
       className={`group inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight text-white/85 border border-white/15 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/25 backdrop-blur-sm transition ${className}`}
@@ -42,11 +44,11 @@ function GhostButton({ children, className = "", as: As = "button", ...rest }) {
   );
 }
 
-function Pill({ children, className = "", tone = "neutral", icon: Icon }) {
+export function Pill({ children, className = '', tone = 'neutral', icon: Icon }) {
   const tones = {
-    neutral: "bg-white/[0.04] border-white/10 text-white/80",
-    em: "bg-em-500/10 border-em-500/30 text-em-300",
-    vi: "bg-vi-500/10 border-vi-500/30 text-vi-300",
+    neutral: 'bg-white/[0.04] border-white/10 text-white/80',
+    em: 'bg-em-500/10 border-em-500/30 text-em-300',
+    vi: 'bg-vi-500/10 border-vi-500/30 text-vi-300',
   };
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium tracking-tight border ${tones[tone]} ${className}`}>
@@ -55,8 +57,7 @@ function Pill({ children, className = "", tone = "neutral", icon: Icon }) {
   );
 }
 
-// Tilt card — 3D hover tilt + glowing border on hover.
-function TiltCard({ children, className = "", glow = "vi", maxTilt = 7, intensity = 1 }) {
+export function TiltCard({ children, className = '', glow = 'vi', maxTilt = 7, intensity = 1 }) {
   const ref = React.useRef(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);
@@ -76,17 +77,16 @@ function TiltCard({ children, className = "", glow = "vi", maxTilt = 7, intensit
   };
   const onLeave = () => { rx.set(0); ry.set(0); gx.set(50); gy.set(50); };
 
-  const glowColor = glow === "em" ? "rgba(16,185,129,.35)" : "rgba(139,92,246,.4)";
+  const glowColor = glow === 'em' ? 'rgba(16,185,129,.35)' : 'rgba(139,92,246,.4)';
 
   return (
     <motion.div
       ref={ref}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      style={{ rotateX: srx, rotateY: sry, transformPerspective: 900, transformStyle: "preserve-3d" }}
+      style={{ rotateX: srx, rotateY: sry, transformPerspective: 900, transformStyle: 'preserve-3d' }}
       className={`relative ${className}`}
     >
-      {/* hover glow */}
       <motion.div
         aria-hidden
         className="absolute inset-0 rounded-[inherit] opacity-0 pointer-events-none"
@@ -100,10 +100,9 @@ function TiltCard({ children, className = "", glow = "vi", maxTilt = 7, intensit
   );
 }
 
-// Section wrapper with eyebrow + heading.
-function SectionHead({ eyebrow, title, kicker, align = "center", className = "" }) {
+export function SectionHead({ eyebrow, title, kicker, align = 'center', className = '' }) {
   return (
-    <div className={`max-w-3xl ${align === "center" ? "mx-auto text-center" : ""} ${className}`}>
+    <div className={`max-w-3xl ${align === 'center' ? 'mx-auto text-center' : ''} ${className}`}>
       {eyebrow && (
         <Reveal delay={0} y={12} className="mb-4">
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-[0.14em] text-em-300 bg-em-500/10 border border-em-500/25">
@@ -124,5 +123,3 @@ function SectionHead({ eyebrow, title, kicker, align = "center", className = "" 
     </div>
   );
 }
-
-Object.assign(window, { Reveal, GlowButton, GhostButton, Pill, TiltCard, SectionHead });

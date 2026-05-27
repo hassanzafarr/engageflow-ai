@@ -1,9 +1,12 @@
-// Hero section — gradient headline, Three.js particles bg, floating glass widgets.
-const { motion: M_hero } = window.Motion;
+import React from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { Sparkles, Check, Repeat, Send, Bolt, Activity, Mic, ArrowRight, Chrome, Play, Shield, Lock, Zap, Linkedin, Xtwitter } from './icons.jsx';
+import { Reveal, GlowButton, GhostButton, Pill } from './ui.jsx';
+import { Particles } from './particles.jsx';
 
-function FloatingWidget({ children, className = "", float = { y: 8, x: 4, dur: 6, delay: 0 }, rotate = 0 }) {
+function FloatingWidget({ children, className = '', float = { y: 8, x: 4, dur: 6, delay: 0 }, rotate = 0 }) {
   return (
-    <M_hero.div
+    <motion.div
       initial={{ opacity: 0, y: 24, scale: 0.96 }}
       animate={{
         opacity: 1, y: [0, -float.y, 0, float.y, 0], x: [0, float.x, 0, -float.x, 0], scale: 1,
@@ -12,14 +15,14 @@ function FloatingWidget({ children, className = "", float = { y: 8, x: 4, dur: 6
       transition={{
         opacity: { duration: 0.8, delay: float.delay },
         scale: { duration: 0.8, delay: float.delay },
-        y: { duration: float.dur, repeat: Infinity, ease: "easeInOut", delay: float.delay + 0.5 },
-        x: { duration: float.dur * 1.3, repeat: Infinity, ease: "easeInOut", delay: float.delay + 0.5 },
-        rotate: { duration: float.dur * 1.5, repeat: Infinity, ease: "easeInOut", delay: float.delay + 0.5 },
+        y: { duration: float.dur, repeat: Infinity, ease: 'easeInOut', delay: float.delay + 0.5 },
+        x: { duration: float.dur * 1.3, repeat: Infinity, ease: 'easeInOut', delay: float.delay + 0.5 },
+        rotate: { duration: float.dur * 1.5, repeat: Infinity, ease: 'easeInOut', delay: float.delay + 0.5 },
       }}
       className={`absolute ${className}`}
     >
       {children}
-    </M_hero.div>
+    </motion.div>
   );
 }
 
@@ -106,7 +109,7 @@ function VoiceDial() {
   );
 }
 
-function Hero({ particleDensity }) {
+export function Hero({ particleDensity }) {
   const mx = useMotionValue(0); const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 60, damping: 18 });
   const sy = useSpring(my, { stiffness: 60, damping: 18 });
@@ -126,7 +129,6 @@ function Hero({ particleDensity }) {
 
   return (
     <section className="relative pt-32 pb-24 overflow-hidden">
-      {/* Background layers */}
       <div className="absolute inset-0 bg-grid bg-grid-fade opacity-60 pointer-events-none"></div>
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[900px] rounded-full"
@@ -167,11 +169,11 @@ function Hero({ particleDensity }) {
 
           <Reveal y={14} delay={0.32}>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <GlowButton variant="em" className="px-6 py-3 text-[15px]">
+              <GlowButton variant="em" className="px-6 py-3 text-[15px]" as="a" href="#pricing">
                 <Chrome size={16}/> Install Chrome Extension
                 <span className="ml-1 text-[11px] font-mono text-em-700/80 bg-em-300/20 px-1.5 py-0.5 rounded">Free</span>
               </GlowButton>
-              <GhostButton className="px-6 py-3 text-[15px]">
+              <GhostButton className="px-6 py-3 text-[15px]" as="a" href="#composer">
                 <Play size={14}/> Try interactive demo
               </GhostButton>
             </div>
@@ -188,13 +190,12 @@ function Hero({ particleDensity }) {
           </Reveal>
         </div>
 
-        {/* Floating widgets */}
-        <M_hero.div style={{ x: wx, y: wy }} className="relative h-[460px] mt-2">
+        <motion.div style={{ x: wx, y: wy }} className="relative h-[460px] mt-2">
           <FloatingWidget className="top-2 left-[2%] hidden md:block" float={{ y: 12, x: 6, dur: 7, delay: 0.4 }} rotate={-4}>
             <MiniReply tone="Insightful · Pro" badge="92 · LinkedIn" text="The retention boost likely tracks back to onboarding friction, not the feature itself. Did you A/B the activation step in week 2?" />
           </FloatingWidget>
           <FloatingWidget className="top-12 right-[3%] hidden md:block" float={{ y: 10, x: 8, dur: 8, delay: 0.6 }} rotate={5}>
-            <MiniReply tone="Witty · X" badge="87 · X" text="“just shipped” doing a lot of heavy lifting in this thread. give us the diff or it didn't happen 👀" />
+            <MiniReply tone="Witty · X" badge="87 · X" text={'“just shipped” doing a lot of heavy lifting in this thread. give us the diff or it didn’t happen 👀'} />
           </FloatingWidget>
           <FloatingWidget className="top-[180px] left-[10%] hidden lg:block" float={{ y: 14, x: 4, dur: 9, delay: 0.85 }} rotate={-2}>
             <ScoreWidget/>
@@ -203,7 +204,6 @@ function Hero({ particleDensity }) {
             <VoiceDial/>
           </FloatingWidget>
 
-          {/* Central composer mock */}
           <FloatingWidget className="left-1/2 -translate-x-1/2 top-8" float={{ y: 6, x: 0, dur: 6, delay: 0.2 }} rotate={0}>
             <div className="ring-grad rounded-3xl">
               <div className="glass-strong rounded-3xl px-5 py-4 w-[420px] sm:w-[460px]">
@@ -220,7 +220,7 @@ function Hero({ particleDensity }) {
                   <Pill tone="em" icon={Bolt}>generating</Pill>
                 </div>
                 <div className="rounded-xl bg-black/30 border border-white/[0.06] px-3.5 py-3 text-[13px] leading-relaxed text-white/85">
-                  <span className="text-em-300">{`>`}</span> The framing of “AI replaces writers” keeps flattening a more interesting question:{" "}
+                  <span className="text-em-300">{'>'}</span>{' '}The framing of &quot;AI replaces writers&quot; keeps flattening a more interesting question:{' '}
                   <span className="bg-vi-500/15 text-vi-200 px-1 rounded">which loops are you willing to delegate</span>, and what do you keep on principle? Mine: outlines no, voice yes.<span className="inline-block w-1.5 h-3.5 align-text-bottom bg-em-400 ml-0.5 animate-pulse"></span>
                 </div>
                 <div className="mt-3 flex items-center justify-between">
@@ -237,9 +237,8 @@ function Hero({ particleDensity }) {
               </div>
             </div>
           </FloatingWidget>
-        </M_hero.div>
+        </motion.div>
 
-        {/* Logo strip */}
         <Reveal delay={0.4} className="mt-2">
           <div className="border-t border-white/[0.06] pt-8">
             <p className="text-center text-[11px] uppercase tracking-[0.18em] text-white/35 mb-5">Drafted for builders shipping at</p>
@@ -254,5 +253,3 @@ function Hero({ particleDensity }) {
     </section>
   );
 }
-
-window.Hero = Hero;

@@ -1,5 +1,7 @@
-// Voice Profile — paste samples / connect profile, click Extract Voice, watch scan.
-const { motion: M_vp, AnimatePresence: AP_vp } = window.Motion;
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Brain, Mic, FileText, X, Activity, Quote, Cpu, Wand, Check, Plus, Link, Repeat, Sparkles, ArrowUpRight } from './icons.jsx';
+import { SectionHead, Reveal } from './ui.jsx';
 
 const SAMPLE_POSTS = [
   "shipped a thing today that took 4 redesigns to get right. the version that worked was the one I almost deleted at 1am on tuesday. there's a lesson in that I will not be unpacking now.",
@@ -10,9 +12,9 @@ const SAMPLE_POSTS = [
 const VOICE_METRICS = [
   { k: 'Story',  v: 'AI Engineer building tools for builders', icon: () => <Brain size={12}/> },
   { k: 'Voice',  v: 'Casual · dry · short sentences · lowercase opens', icon: () => <Mic size={12}/> },
-  { k: 'Vocab',  v: '“ship”, “moat”, “signal”, “loops”, “diff”', icon: () => <FileText size={12}/> },
-  { k: 'Avoid',  v: 'em-dashes, “game-changer”, 🚀 emojis, hype clichés', icon: () => <X size={12}/> },
-  { k: 'Cadence',v: 'Open with concrete · land with a single takeaway', icon: () => <Activity size={12}/> },
+  { k: 'Vocab',  v: '"ship", "moat", "signal", "loops", "diff"', icon: () => <FileText size={12}/> },
+  { k: 'Avoid',  v: 'em-dashes, "game-changer", 🚀 emojis, hype clichés', icon: () => <X size={12}/> },
+  { k: 'Cadence', v: 'Open with concrete · land with a single takeaway', icon: () => <Activity size={12}/> },
 ];
 
 const STEPS = [
@@ -21,7 +23,7 @@ const STEPS = [
   { n: 3, k: 'Apply',    d: 'Every reply written in your fingerprint' },
 ];
 
-function VoiceProfile() {
+export function VoiceProfile() {
   const [step, setStep] = React.useState(1);
   const [scanning, setScanning] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
@@ -55,7 +57,6 @@ function VoiceProfile() {
           kicker="Drop in a handful of your past posts. EngageFlow extracts your story, your rules, and the patterns you'd never write down — then writes every reply in that fingerprint."
         />
 
-        {/* Step rail */}
         <Reveal delay={0.1}>
           <div className="mt-12 max-w-3xl mx-auto flex items-center gap-3 sm:gap-6">
             {STEPS.map((s, i) => (
@@ -76,9 +77,9 @@ function VoiceProfile() {
                 {i < STEPS.length - 1 && (
                   <div className="flex-1 h-px relative">
                     <div className="absolute inset-0 bg-white/[0.07]"></div>
-                    <M_vp.div
+                    <motion.div
                       initial={{ width: 0 }}
-                      animate={{ width: step > s.n ? '100%' : step === s.n + 0.5 ? '60%' : '0%' }}
+                      animate={{ width: step > s.n ? '100%' : '0%' }}
                       transition={{ duration: 0.6 }}
                       className="absolute inset-y-0 left-0 bg-gradient-to-r from-em-400 to-vi-400"
                       style={{ boxShadow: '0 0 12px rgba(139,92,246,.5)' }}
@@ -90,10 +91,8 @@ function VoiceProfile() {
           </div>
         </Reveal>
 
-        {/* Main demo */}
         <Reveal delay={0.18} className="mt-12">
           <div className="grid lg:grid-cols-12 gap-6">
-            {/* Left: samples */}
             <div className="lg:col-span-5">
               <div className="glass rounded-2xl p-5">
                 <div className="flex items-center justify-between mb-3">
@@ -109,7 +108,7 @@ function VoiceProfile() {
                       <span className="absolute left-0 top-3 bottom-3 w-[2px] bg-vi-500/60 rounded-r-full"></span>
                       <p className="text-[12.5px] leading-relaxed text-white/75">{p}</p>
                       {scanning && (
-                        <M_vp.div
+                        <motion.div
                           aria-hidden
                           className="absolute inset-y-0 left-0 w-12 pointer-events-none"
                           initial={{ x: -20, opacity: 0 }}
@@ -140,10 +139,8 @@ function VoiceProfile() {
               </div>
             </div>
 
-            {/* Right: extraction surface */}
             <div className="lg:col-span-7">
               <div className="relative glass-strong rounded-2xl p-6 overflow-hidden min-h-[420px]">
-                {/* connection wires */}
                 <svg aria-hidden className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 600 420" preserveAspectRatio="none">
                   <defs>
                     <linearGradient id="wireA" x1="0" y1="0" x2="1" y2="0">
@@ -152,16 +149,11 @@ function VoiceProfile() {
                       <stop offset="100%" stopColor="#8b5cf6" stopOpacity=".4"/>
                     </linearGradient>
                   </defs>
-                  {[
-                    'M -20 60 C 200 60, 260 160, 380 160',
-                    'M -20 140 C 220 140, 280 220, 380 220',
-                    'M -20 220 C 180 220, 280 280, 380 280',
-                    'M -20 300 C 220 300, 280 340, 380 340',
-                  ].map((d, i) => (
+                  {['M -20 60 C 200 60, 260 160, 380 160','M -20 140 C 220 140, 280 220, 380 220','M -20 220 C 180 220, 280 280, 380 280','M -20 300 C 220 300, 280 340, 380 340'].map((d, i) => (
                     <g key={i}>
                       <path d={d} stroke="rgba(255,255,255,.06)" strokeWidth="1" fill="none"/>
                       {(scanning || done) && (
-                        <M_vp.path
+                        <motion.path
                           d={d} stroke="url(#wireA)" strokeWidth="1.2" fill="none"
                           initial={{ pathLength: 0, opacity: 0 }}
                           animate={{ pathLength: scanning ? [0, 1, 1] : 1, opacity: 1 }}
@@ -183,38 +175,28 @@ function VoiceProfile() {
                     </span>
                   </div>
 
-                  {/* progress bar */}
                   <div className="h-1 rounded-full bg-white/[0.05] overflow-hidden mb-6">
-                    <M_vp.div
+                    <motion.div
                       className="h-full rounded-full"
-                      style={{
-                        background: 'linear-gradient(90deg, #10b981, #8b5cf6)',
-                        boxShadow: '0 0 12px rgba(139,92,246,.6)',
-                      }}
+                      style={{ background: 'linear-gradient(90deg, #10b981, #8b5cf6)', boxShadow: '0 0 12px rgba(139,92,246,.6)' }}
                       animate={{ width: `${done ? 100 : progress}%` }}
                       transition={{ duration: 0.2 }}
                     />
                   </div>
 
-                  {/* metrics */}
                   <div className="grid grid-cols-1 gap-2.5">
                     {VOICE_METRICS.map((m, i) => {
                       const revealed = done || (scanning && progress > i * 20 + 5);
                       return (
-                        <M_vp.div
+                        <motion.div
                           key={i}
                           initial={false}
-                          animate={{
-                            opacity: revealed ? 1 : 0.25,
-                            x: revealed ? 0 : -8,
-                            filter: revealed ? 'blur(0)' : 'blur(3px)',
-                          }}
+                          animate={{ opacity: revealed ? 1 : 0.25, x: revealed ? 0 : -8, filter: revealed ? 'blur(0)' : 'blur(3px)' }}
                           transition={{ duration: 0.4 }}
                           className={`flex items-center gap-3 rounded-xl border px-4 py-2.5
                                      ${revealed ? 'border-em-500/25 bg-em-500/[0.04]' : 'border-white/[0.06] bg-white/[0.02]'}`}
                         >
-                          <span className={`w-7 h-7 rounded-lg grid place-items-center
-                                            ${revealed ? 'bg-em-500/15 text-em-300' : 'bg-white/[0.04] text-white/30'}`}>
+                          <span className={`w-7 h-7 rounded-lg grid place-items-center ${revealed ? 'bg-em-500/15 text-em-300' : 'bg-white/[0.04] text-white/30'}`}>
                             <m.icon/>
                           </span>
                           <div className="flex-1 min-w-0">
@@ -222,15 +204,14 @@ function VoiceProfile() {
                             <div className="text-[13px] text-white/85 truncate">{m.v}</div>
                           </div>
                           {revealed && <Check size={14} className="text-em-300 shrink-0"/>}
-                        </M_vp.div>
+                        </motion.div>
                       );
                     })}
                   </div>
 
-                  {/* finish state */}
-                  <AP_vp>
+                  <AnimatePresence>
                     {done && (
-                      <M_vp.div
+                      <motion.div
                         initial={{ opacity: 0, y: 12 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 8 }}
@@ -245,9 +226,9 @@ function VoiceProfile() {
                           <div className="text-[11px] text-white/55">Re-train any time you change tone. Stored locally.</div>
                         </div>
                         <ArrowUpRight size={16} className="text-vi-300"/>
-                      </M_vp.div>
+                      </motion.div>
                     )}
-                  </AP_vp>
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
@@ -257,5 +238,3 @@ function VoiceProfile() {
     </section>
   );
 }
-
-window.VoiceProfile = VoiceProfile;

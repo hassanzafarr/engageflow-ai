@@ -1,14 +1,10 @@
-// Three.js particle network background with cursor gravity + emerald/violet glow.
-// Mounts into a <Particles density={...} /> component.
-const { useEffect, useRef } = React;
+import React, { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 
-function Particles({ density = 1, paused = false }) {
+export function Particles({ density = 1 }) {
   const mountRef = useRef(null);
-  const stateRef = useRef({});
 
   useEffect(() => {
-    const THREE = window.THREE;
-    if (!THREE) return;
     const mount = mountRef.current;
     if (!mount) return;
 
@@ -25,7 +21,6 @@ function Particles({ density = 1, paused = false }) {
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
 
-    // ---- Particles ----
     const COUNT = Math.floor(220 * density);
     const positions = new Float32Array(COUNT * 3);
     const velocities = new Float32Array(COUNT * 3);
@@ -42,7 +37,7 @@ function Particles({ density = 1, paused = false }) {
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
       const x = r * Math.sin(phi) * Math.cos(theta);
-      const y = r * Math.sin(phi) * Math.sin(theta) * 0.55; // flatten vertically
+      const y = r * Math.sin(phi) * Math.sin(theta) * 0.55;
       const z = r * Math.cos(phi) - 10;
       positions[i*3+0] = x; positions[i*3+1] = y; positions[i*3+2] = z;
       homePositions[i*3+0] = x; homePositions[i*3+1] = y; homePositions[i*3+2] = z;
@@ -60,7 +55,6 @@ function Particles({ density = 1, paused = false }) {
     geom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     geom.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
 
-    // Round soft sprite via canvas texture
     const spriteCanvas = document.createElement('canvas');
     spriteCanvas.width = spriteCanvas.height = 64;
     const sctx = spriteCanvas.getContext('2d');
@@ -74,18 +68,12 @@ function Particles({ density = 1, paused = false }) {
     const tex = new THREE.CanvasTexture(spriteCanvas);
 
     const mat = new THREE.PointsMaterial({
-      size: 1.6,
-      map: tex,
-      vertexColors: true,
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      sizeAttenuation: true,
+      size: 1.6, map: tex, vertexColors: true, transparent: true,
+      depthWrite: false, blending: THREE.AdditiveBlending, sizeAttenuation: true,
     });
     const points = new THREE.Points(geom, mat);
     scene.add(points);
 
-    // ---- Lines between near-neighbors (computed each frame, capped) ----
     const MAX_LINES = 700;
     const linePositions = new Float32Array(MAX_LINES * 2 * 3);
     const lineColors = new Float32Array(MAX_LINES * 2 * 3);
@@ -99,7 +87,6 @@ function Particles({ density = 1, paused = false }) {
     const lines = new THREE.LineSegments(lineGeom, lineMat);
     scene.add(lines);
 
-    // ---- Resize ----
     const onResize = () => {
       camera.aspect = w() / h(); camera.updateProjectionMatrix();
       renderer.setSize(w(), h());
@@ -107,9 +94,7 @@ function Particles({ density = 1, paused = false }) {
     window.addEventListener('resize', onResize);
     const ro = new ResizeObserver(onResize); ro.observe(mount);
 
-    // ---- Animation ----
     let raf, t0 = performance.now();
-    const tmp = new THREE.Vector3();
     const homeVec = new THREE.Vector3();
     const tick = () => {
       const dt = Math.min(40, performance.now() - t0); t0 = performance.now();
@@ -117,10 +102,8 @@ function Particles({ density = 1, paused = false }) {
       const lpos = lineGeom.attributes.position.array;
       const lcol = lineGeom.attributes.color.array;
 
-      // particles
       for (let i = 0; i < COUNT; i++) {
         const ix = i * 3;
-        // gentle home-return spring
         homeVec.set(homePositions[ix], homePositions[ix+1], homePositions[ix+2]);
         const dxh = homeVec.x - pos[ix];
         const dyh = homeVec.y - pos[ix+1];
@@ -128,23 +111,17 @@ function Particles({ density = 1, paused = false }) {
         velocities[ix]   += dxh * 0.0008;
         velocities[ix+1] += dyh * 0.0008;
         velocities[ix+2] += dzh * 0.0008;
-
-        // drift noise
         velocities[ix]   += (Math.sin(t0 * 0.0003 + i) * 0.0006);
         velocities[ix+1] += (Math.cos(t0 * 0.00037 + i * 1.3) * 0.0006);
-
-        // damp + integrate
         velocities[ix]   *= 0.96;
         velocities[ix+1] *= 0.96;
         velocities[ix+2] *= 0.96;
-
         pos[ix]   += velocities[ix];
         pos[ix+1] += velocities[ix+1];
         pos[ix+2] += velocities[ix+2];
       }
       geom.attributes.position.needsUpdate = true;
 
-      // connections (chunked: only sample some pairs each frame for perf)
       let li = 0;
       const step = Math.max(1, Math.floor(COUNT / 90));
       for (let a = 0; a < COUNT && li < MAX_LINES; a += 1) {
@@ -153,24 +130,21 @@ function Particles({ density = 1, paused = false }) {
           const bx = pos[b*3], by = pos[b*3+1], bz = pos[b*3+2];
           const dx = ax - bx, dy = ay - by, dz = az - bz;
           const d2 = dx*dx + dy*dy + dz*dz;
-          const TH = 70; // threshold squared
+          const TH = 70;
           if (d2 < TH) {
             const alpha = 1 - d2 / TH;
             lpos[li*6+0] = ax; lpos[li*6+1] = ay; lpos[li*6+2] = az;
             lpos[li*6+3] = bx; lpos[li*6+4] = by; lpos[li*6+5] = bz;
-            // color = blend of endpoints
-            const ca = colors, cb = colors;
-            lcol[li*6+0] = ca[a*3]   * alpha;
-            lcol[li*6+1] = ca[a*3+1] * alpha;
-            lcol[li*6+2] = ca[a*3+2] * alpha;
-            lcol[li*6+3] = cb[b*3]   * alpha;
-            lcol[li*6+4] = cb[b*3+1] * alpha;
-            lcol[li*6+5] = cb[b*3+2] * alpha;
+            lcol[li*6+0] = colors[a*3]   * alpha;
+            lcol[li*6+1] = colors[a*3+1] * alpha;
+            lcol[li*6+2] = colors[a*3+2] * alpha;
+            lcol[li*6+3] = colors[b*3]   * alpha;
+            lcol[li*6+4] = colors[b*3+1] * alpha;
+            lcol[li*6+5] = colors[b*3+2] * alpha;
             li++;
           }
         }
       }
-      // zero out unused tail (avoid leftover frame data)
       for (let k = li; k < MAX_LINES; k++) {
         lpos[k*6+0] = lpos[k*6+1] = lpos[k*6+2] = 0;
         lpos[k*6+3] = lpos[k*6+4] = lpos[k*6+5] = 0;
@@ -179,7 +153,6 @@ function Particles({ density = 1, paused = false }) {
       lineGeom.attributes.position.needsUpdate = true;
       lineGeom.attributes.color.needsUpdate = true;
 
-      // slow camera roll
       points.rotation.y += 0.0008;
       points.rotation.x = Math.sin(performance.now() * 0.0001) * 0.06;
       lines.rotation.copy(points.rotation);
@@ -188,8 +161,6 @@ function Particles({ density = 1, paused = false }) {
       raf = requestAnimationFrame(tick);
     };
     tick();
-
-    stateRef.current = { scene, camera, renderer, mat, tex };
 
     return () => {
       cancelAnimationFrame(raf);
@@ -203,5 +174,3 @@ function Particles({ density = 1, paused = false }) {
 
   return <div ref={mountRef} className="absolute inset-0 pointer-events-none" />;
 }
-
-window.Particles = Particles;

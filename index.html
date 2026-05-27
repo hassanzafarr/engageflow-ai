@@ -4,7 +4,22 @@
 <meta charset="utf-8" />
 <title>EngageFlow AI — Your Voice, Amplified</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="icon" href="assets/icon-128.png" />
+<meta name="description" content="EngageFlow AI is a Chrome extension that scans your LinkedIn and X feeds, drafts replies in your voice, and schedules posts — powered by Claude AI, fully private." />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://engageflow.ai/" />
+<meta property="og:title" content="EngageFlow AI — Your Voice, Amplified" />
+<meta property="og:description" content="AI-powered engagement for LinkedIn and X. Scan feeds, draft replies in your voice, schedule posts. Your API key, no relay servers." />
+<meta property="og:image" content="https://engageflow.ai/og-image.png" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="EngageFlow AI — Your Voice, Amplified" />
+<meta name="twitter:description" content="AI-powered engagement for LinkedIn and X. Scan feeds, draft replies in your voice, schedule posts." />
+<meta name="twitter:image" content="https://engageflow.ai/og-image.png" />
+
+<link rel="icon" href="/icon-128.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -37,7 +52,6 @@
   body { font-family: 'Inter Tight', ui-sans-serif, system-ui; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
   ::selection { background: rgba(139,92,246,.35); color: #fff; }
 
-  /* Gradient text */
   .text-grad {
     background: linear-gradient(96deg, #ffffff 0%, #d4d4d8 35%, #a78bfa 60%, #34d399 90%);
     -webkit-background-clip: text; background-clip: text;
@@ -48,7 +62,6 @@
     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   }
 
-  /* Glass card */
   .glass {
     background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
     border: 1px solid rgba(255,255,255,.08);
@@ -71,7 +84,6 @@
     pointer-events: none;
   }
 
-  /* Subtle grid background */
   .bg-grid {
     background-image:
       linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
@@ -84,16 +96,13 @@
             mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 80%);
   }
 
-  /* Marquee */
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   .marquee-track { animation: marquee 40s linear infinite; }
 
-  /* Scrollbar */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius: 8px; }
 
-  /* range input baseline */
   input[type=range].neon {
     -webkit-appearance: none; appearance: none; height: 6px; border-radius: 999px;
     background: linear-gradient(90deg, #8b5cf6 var(--p,50%), rgba(255,255,255,.08) var(--p,50%));
@@ -108,17 +117,13 @@
     box-shadow: 0 0 0 4px rgba(139,92,246,.25), 0 0 24px rgba(139,92,246,.7);
   }
 
-  /* glow utilities */
   .em-glow { box-shadow: 0 0 0 1px rgba(16,185,129,.45), 0 10px 40px -8px rgba(16,185,129,.55), inset 0 0 20px -8px rgba(110,231,183,.45); }
   .vi-glow { box-shadow: 0 0 0 1px rgba(139,92,246,.45), 0 10px 40px -8px rgba(139,92,246,.55), inset 0 0 20px -8px rgba(196,181,253,.45); }
 
-  /* hide tweaks panel inversion since we're dark */
   .twk-panel { color-scheme: light; }
 
-  /* prevent layout shift from images */
   img { display: block; }
 
-  /* utility */
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { scrollbar-width: none; }
 </style>
@@ -127,30 +132,7 @@
 
 <div id="root"></div>
 
-<!-- React -->
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-
-<!-- Framer Motion (UMD exposes window.Motion) -->
-<script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.js"></script>
-
-<!-- Three.js (UMD exposes window.THREE) -->
-<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-
-<!-- App scripts -->
-<script type="text/babel" src="src/icons.jsx"></script>
-<script type="text/babel" src="src/particles.jsx"></script>
-<script type="text/babel" src="src/ui.jsx"></script>
-<script type="text/babel" src="src/hero.jsx"></script>
-<script type="text/babel" src="src/feed-scanner.jsx"></script>
-<script type="text/babel" src="src/voice-profile.jsx"></script>
-<script type="text/babel" src="src/composer.jsx"></script>
-<script type="text/babel" src="src/features.jsx"></script>
-<script type="text/babel" src="src/scheduler.jsx"></script>
-<script type="text/babel" src="src/sections.jsx"></script>
-<script type="text/babel" src="tweaks-panel.jsx"></script>
-<script type="text/babel" src="src/app.jsx"></script>
+<script type="module" src="/src/main.jsx"></script>
 
 </body>
 </html>

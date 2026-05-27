@@ -1,5 +1,7 @@
-// Interactive Feed Scanner — score threshold slider; posts above light up, below fade out.
-const { motion: M_fs, AnimatePresence: AP_fs } = window.Motion;
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Filter, Star, Zap, Wand, Linkedin, Xtwitter, Heart, MessageCircle, Repeat } from './icons.jsx';
+import { Reveal, Pill } from './ui.jsx';
 
 const FEED_POSTS = [
   { id: 1, author: 'Maya Chen', handle: 'mayabuilds', role: 'Founder · Lattice AI', score: 94, topic: 'Retention loops', tone: 'em',
@@ -9,15 +11,15 @@ const FEED_POSTS = [
     text: 'Hot take: every dev tool startup eventually rebuilds its own SDK three times. The first one is "MVP". The second is "good". The third is the one users actually love. Skip to three.',
     likes: 1240, replies: 92, network: 'x' },
   { id: 3, author: 'Priya N.', handle: 'priyan', role: 'Design Lead', score: 81, topic: 'AI design', tone: 'em',
-    text: 'AI features die when they\'re styled like AI. Glowing borders, sparkle icons, "generating..." spinners — your users learn to ignore that visual vocabulary. Hide the magic. Show the result.',
+    text: "AI features die when they're styled like AI. Glowing borders, sparkle icons, \"generating...\" spinners — your users learn to ignore that visual vocabulary. Hide the magic. Show the result.",
     likes: 803, replies: 47, network: 'in' },
-  { id: 4, author: 'Sam K.', handle: 'samk', role: 'Growth · Stripe', score: 76, topic: 'Pricing', tone: 'em',
+  { id: 4, author: 'Sam K.', handle: 'samk', role: 'Growth · B2B SaaS', score: 76, topic: 'Pricing', tone: 'em',
     text: 'Pricing pages convert best when there are exactly 3 plans and the middle one looks slightly inevitable. Everything else is a research project.',
     likes: 522, replies: 31, network: 'in' },
   { id: 5, author: 'Lex M.', handle: 'lexmtweets', role: 'AI Eng', score: 64, topic: 'Models', tone: 'vi',
-    text: 'Benchmark obsession is back. Reminder that nobody picked Claude because it scored 0.4% higher on MMLU. They picked it because of how it talks at 2am when you\'re fixing prod.',
+    text: "Benchmark obsession is back. Reminder that nobody picked Claude because it scored 0.4% higher on MMLU. They picked it because of how it talks at 2am when you're fixing prod.",
     likes: 1880, replies: 220, network: 'x' },
-  { id: 6, author: 'Aiden P.', handle: 'aiden_p', role: 'PM · Notion', score: 52, topic: 'PM', tone: 'vi',
+  { id: 6, author: 'Aiden P.', handle: 'aiden_p', role: 'Product Manager', score: 52, topic: 'PM', tone: 'vi',
     text: 'Tell me about a feature you killed and what it taught you. (genuinely curious — comments only, no quote-tweets pls)',
     likes: 89, replies: 12, network: 'x' },
   { id: 7, author: 'Brett T.', handle: 'thebrettshow', role: 'Creator', score: 41, topic: 'Hype', tone: 'vi',
@@ -28,7 +30,7 @@ const FEED_POSTS = [
     likes: 8, replies: 3, network: 'in' },
 ];
 
-function FeedScanner() {
+export function FeedScanner() {
   const [threshold, setThreshold] = React.useState(70);
   const [topic, setTopic] = React.useState('All topics');
 
@@ -105,10 +107,8 @@ function FeedScanner() {
             </Reveal>
           </div>
 
-          {/* Mock feed */}
           <div className="lg:col-span-7">
             <div className="relative">
-              {/* Browser chrome */}
               <div className="glass rounded-t-2xl px-4 py-2.5 flex items-center gap-3 border-b-0">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-400/60"></span>
@@ -122,11 +122,11 @@ function FeedScanner() {
               </div>
 
               <div className="glass rounded-b-2xl border-t-0 p-4 max-h-[640px] overflow-y-auto no-scrollbar space-y-3">
-                <AP_fs initial={false}>
+                <AnimatePresence initial={false}>
                   {FEED_POSTS.map((p) => {
                     const passes = p.score >= threshold;
                     return (
-                      <M_fs.div
+                      <motion.div
                         key={p.id}
                         layout
                         initial={false}
@@ -139,7 +139,6 @@ function FeedScanner() {
                         className={`relative rounded-xl p-4 pl-5 border ${passes ? 'border-vi-500/30 bg-white/[0.03]' : 'border-white/[0.04] bg-white/[0.015]'}`}
                         style={passes ? { boxShadow: '0 0 0 1px rgba(139,92,246,.18), 0 8px 30px -10px rgba(139,92,246,.35)' } : {}}
                       >
-                        {/* glowing left border */}
                         {passes && (
                           <span aria-hidden className="absolute left-0 top-3 bottom-3 w-[3px] rounded-r-full bg-gradient-to-b from-vi-400 to-em-400"
                                 style={{ boxShadow: '0 0 16px rgba(139,92,246,.6)' }}></span>
@@ -160,9 +159,9 @@ function FeedScanner() {
                                 <div className="text-[13.5px] font-semibold text-white/90 leading-tight">{p.author} <span className="text-white/35 font-normal">· @{p.handle}</span></div>
                                 <div className="text-[11px] text-white/45">{p.role}</div>
                               </div>
-                              <AP_fs>
+                              <AnimatePresence>
                                 {passes && (
-                                  <M_fs.div
+                                  <motion.div
                                     initial={{ opacity: 0, scale: 0.85, x: 8 }}
                                     animate={{ opacity: 1, scale: 1, x: 0 }}
                                     exit={{ opacity: 0, scale: 0.85, x: 8 }}
@@ -170,9 +169,9 @@ function FeedScanner() {
                                     className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-vi-500/15 border border-vi-500/40">
                                     <Star size={10} className="text-vi-300 fill-vi-300"/>
                                     <span className="text-[10.5px] font-mono text-vi-200 tabular-nums">{p.score}</span>
-                                  </M_fs.div>
+                                  </motion.div>
                                 )}
-                              </AP_fs>
+                              </AnimatePresence>
                             </div>
                             <p className="mt-2 text-[13.5px] leading-relaxed text-white/80">{p.text}</p>
                             <div className="mt-2.5 flex items-center gap-4 text-[11px] text-white/40">
@@ -182,9 +181,9 @@ function FeedScanner() {
                               <span className="ml-auto text-[10px] font-mono text-white/35">topic: {p.topic}</span>
                             </div>
 
-                            <AP_fs>
+                            <AnimatePresence>
                               {passes && p.score >= 80 && (
-                                <M_fs.div
+                                <motion.div
                                   layout
                                   initial={{ opacity: 0, height: 0, marginTop: 0 }}
                                   animate={{ opacity: 1, height: 'auto', marginTop: 12 }}
@@ -199,15 +198,15 @@ function FeedScanner() {
                                       p.id === 3 ? "This. The best AI feature we shipped this year has zero visual indicator that it's AI — users just call it 'the smart sort.'" :
                                       "The middle plan looking inevitable is doing a lot of work. Have you tested what happens when you remove it entirely?"}</span>
                                   </div>
-                                </M_fs.div>
+                                </motion.div>
                               )}
-                            </AP_fs>
+                            </AnimatePresence>
                           </div>
                         </div>
-                      </M_fs.div>
+                      </motion.div>
                     );
                   })}
-                </AP_fs>
+                </AnimatePresence>
               </div>
             </div>
           </div>
@@ -216,5 +215,3 @@ function FeedScanner() {
     </section>
   );
 }
-
-window.FeedScanner = FeedScanner;
