@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Mic, FileText, X, Activity, Quote, Cpu, Wand, Check, Plus, Link, Repeat, Sparkles, ArrowUpRight } from './icons.jsx';
+import { Brain, Mic, FileText, X, Activity, Quote, Cpu, Wand, Check, Plus, Link, Repeat, Sparkles, ArrowUpRight, Xtwitter, Linkedin } from './icons.jsx';
 import { SectionHead, Reveal } from './ui.jsx';
 
 const SAMPLE_POSTS = [
@@ -23,11 +23,18 @@ const STEPS = [
   { n: 3, k: 'Apply',    d: 'Every reply written in your fingerprint' },
 ];
 
+const IMPORT_SOURCES = [
+  { id: 'paste', label: 'Paste posts', icon: () => <Quote size={12}/> },
+  { id: 'x',     label: 'Import from X', icon: () => <Xtwitter size={12}/> },
+];
+
 export function VoiceProfile() {
   const [step, setStep] = React.useState(1);
   const [scanning, setScanning] = React.useState(false);
   const [progress, setProgress] = React.useState(0);
   const [done, setDone] = React.useState(false);
+  const [source, setSource] = React.useState('paste');
+  const [xHandle, setXHandle] = React.useState('');
 
   const runExtract = () => {
     if (scanning || done) return;
@@ -46,7 +53,7 @@ export function VoiceProfile() {
     }, 70);
   };
 
-  const reset = () => { setScanning(false); setDone(false); setProgress(0); setStep(1); };
+  const reset = () => { setScanning(false); setDone(false); setProgress(0); setStep(1); setSource('paste'); setXHandle(''); };
 
   return (
     <section id="voice" className="relative py-28 border-t border-white/[0.05]">
@@ -95,44 +102,100 @@ export function VoiceProfile() {
           <div className="grid lg:grid-cols-12 gap-6">
             <div className="lg:col-span-5">
               <div className="glass rounded-2xl p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Quote size={14} className="text-vi-300"/>
-                    <span className="text-[13px] font-semibold text-white/85">Your past posts</span>
-                  </div>
-                  <span className="text-[10.5px] font-mono text-white/40">3 / 10 connected</span>
-                </div>
-                <div className="space-y-2.5">
-                  {SAMPLE_POSTS.map((p, i) => (
-                    <div key={i} className="relative rounded-xl bg-black/30 border border-white/[0.06] p-3 pl-4">
-                      <span className="absolute left-0 top-3 bottom-3 w-[2px] bg-vi-500/60 rounded-r-full"></span>
-                      <p className="text-[12.5px] leading-relaxed text-white/75">{p}</p>
-                      {scanning && (
-                        <motion.div
-                          aria-hidden
-                          className="absolute inset-y-0 left-0 w-12 pointer-events-none"
-                          initial={{ x: -20, opacity: 0 }}
-                          animate={{ x: 'calc(100% + 20px)', opacity: [0, 1, 1, 0] }}
-                          transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.3, ease: 'easeInOut' }}
-                          style={{ background: 'linear-gradient(90deg, transparent, rgba(110,231,183,.18), transparent)' }}
-                        />
-                      )}
-                    </div>
+                <div className="flex items-center gap-1.5 mb-4 p-1 rounded-xl bg-black/30 border border-white/[0.06]">
+                  {IMPORT_SOURCES.map(s => (
+                    <button
+                      key={s.id}
+                      onClick={() => { if (!scanning && !done) setSource(s.id); }}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11.5px] font-semibold transition
+                                  ${source === s.id ? 'bg-white/10 text-white' : 'text-white/45 hover:text-white/70'}`}
+                    >
+                      <s.icon/> {s.label}
+                    </button>
                   ))}
-                  <button className="w-full py-2.5 rounded-xl border border-dashed border-white/15 text-[12px] text-white/55 hover:text-white/85 hover:border-white/30 transition flex items-center justify-center gap-2">
-                    <Plus size={13}/> Paste more posts
-                  </button>
                 </div>
+
+                <AnimatePresence mode="wait">
+                  {source === 'paste' ? (
+                    <motion.div key="paste" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="space-y-2.5">
+                      {SAMPLE_POSTS.map((p, i) => (
+                        <div key={i} className="relative rounded-xl bg-black/30 border border-white/[0.06] p-3 pl-4">
+                          <span className="absolute left-0 top-3 bottom-3 w-[2px] bg-vi-500/60 rounded-r-full"></span>
+                          <p className="text-[12.5px] leading-relaxed text-white/75">{p}</p>
+                          {scanning && (
+                            <motion.div
+                              aria-hidden
+                              className="absolute inset-y-0 left-0 w-12 pointer-events-none"
+                              initial={{ x: -20, opacity: 0 }}
+                              animate={{ x: 'calc(100% + 20px)', opacity: [0, 1, 1, 0] }}
+                              transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.3, ease: 'easeInOut' }}
+                              style={{ background: 'linear-gradient(90deg, transparent, rgba(110,231,183,.18), transparent)' }}
+                            />
+                          )}
+                        </div>
+                      ))}
+                      <button className="w-full py-2.5 rounded-xl border border-dashed border-white/15 text-[12px] text-white/55 hover:text-white/85 hover:border-white/30 transition flex items-center justify-center gap-2">
+                        <Plus size={13}/> Paste more posts
+                      </button>
+                    </motion.div>
+                  ) : (
+                    <motion.div key="x" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="space-y-3">
+                      <div className="rounded-xl bg-black/30 border border-white/[0.06] p-4 space-y-3">
+                        <div className="flex items-center gap-2 text-white/60 text-[12px]">
+                          <Xtwitter size={13} className="text-white/70"/>
+                          <span>EngageFlow pulls your recent posts and extracts your voice fingerprint automatically.</span>
+                        </div>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/40 text-[13px] font-mono select-none">@</span>
+                          <input
+                            type="text"
+                            value={xHandle}
+                            onChange={e => setXHandle(e.target.value.replace(/^@/, ''))}
+                            placeholder="yourhandle"
+                            disabled={scanning || done}
+                            className="w-full bg-black/40 border border-white/10 rounded-lg pl-7 pr-3 py-2 text-[13px] text-white placeholder:text-white/25 focus:outline-none focus:border-white/25 disabled:opacity-50 transition"
+                          />
+                        </div>
+                        <p className="text-[10.5px] text-white/35">Reads only public posts. Nothing is stored on our servers.</p>
+                      </div>
+                      {scanning && (
+                        <div className="space-y-2">
+                          {[1,2,3].map(i => (
+                            <div key={i} className="relative rounded-xl bg-black/30 border border-white/[0.06] p-3 pl-4 overflow-hidden">
+                              <span className="absolute left-0 top-3 bottom-3 w-[2px] bg-vi-500/60 rounded-r-full"></span>
+                              <div className="h-2 bg-white/[0.06] rounded-full mb-1.5" style={{ width: `${60 + i * 12}%` }}></div>
+                              <div className="h-2 bg-white/[0.04] rounded-full" style={{ width: `${40 + i * 8}%` }}></div>
+                              <motion.div
+                                aria-hidden
+                                className="absolute inset-y-0 left-0 w-12 pointer-events-none"
+                                initial={{ x: -20, opacity: 0 }}
+                                animate={{ x: 'calc(100% + 20px)', opacity: [0, 1, 1, 0] }}
+                                transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.3, ease: 'easeInOut' }}
+                                style={{ background: 'linear-gradient(90deg, transparent, rgba(110,231,183,.18), transparent)' }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <div className="mt-4 pt-4 border-t border-white/[0.06] flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[11.5px] text-white/55">
-                    <Link size={12}/> linkedin.com/in/yourname
+                    {source === 'x'
+                      ? <><Xtwitter size={12}/> {xHandle ? `@${xHandle}` : 'x.com profile'}</>
+                      : <><Link size={12}/> linkedin.com/in/yourname</>
+                    }
                   </div>
                   <button
                     onClick={done ? reset : runExtract}
-                    disabled={scanning}
+                    disabled={scanning || (source === 'x' && !xHandle.trim())}
                     className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[12px] font-semibold transition
-                                ${scanning ? 'bg-white/5 text-white/45 cursor-wait' : done ? 'bg-white/10 text-white/85 hover:bg-white/15' : 'bg-em-500 text-ink-950 hover:bg-em-400 shadow-[0_8px_28px_-8px_rgba(16,185,129,.6)]'}`}>
+                                ${scanning ? 'bg-white/5 text-white/45 cursor-wait'
+                                  : done ? 'bg-white/10 text-white/85 hover:bg-white/15'
+                                  : (source === 'x' && !xHandle.trim()) ? 'bg-white/5 text-white/30 cursor-not-allowed'
+                                  : 'bg-em-500 text-ink-950 hover:bg-em-400 shadow-[0_8px_28px_-8px_rgba(16,185,129,.6)]'}`}>
                     {scanning ? <><Cpu size={12} className="animate-spin"/> Scanning</> : done ? <><Repeat size={12}/> Reset</> : <><Wand size={12}/> Extract voice</>}
                   </button>
                 </div>
