@@ -129,7 +129,7 @@ export function FeaturesGrid() {
           kicker="EngageFlow doesn't replace your writing — it removes the friction between thinking it and posting it."
         />
         <div className="mt-14 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          <FeatureCard icon={Layers} title="Thread Builder" badge="X · LinkedIn" accent="em"
+          <FeatureCard icon={Layers} title="Thread Builder" badge="X" accent="em"
             desc="Outline once, expand into a thread that breaks at the right beats. Hook, payoff, CTA — composed, not stitched."
             mock={<ThreadMock/>}
           />

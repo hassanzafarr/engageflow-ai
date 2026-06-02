@@ -26,9 +26,9 @@ export function Nav() {
       className="fixed top-0 inset-x-0 z-50 border-b border-white/[0.06]">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2.5 group">
-          <span className="relative w-7 h-7 rounded-lg overflow-hidden grid place-items-center"
-                style={{ background: 'linear-gradient(135deg, #10b981, #8b5cf6)', boxShadow: '0 0 18px rgba(139,92,246,.4)' }}>
-            <Sparkles size={14} className="text-ink-950"/>
+          <span className="relative w-7 h-7 rounded-lg overflow-hidden bg-white grid place-items-center shrink-0"
+                style={{ boxShadow: '0 0 18px rgba(139,92,246,.4)' }}>
+            <img src="/logo.png" alt="EngageFlow" className="w-6 h-6 object-contain" />
           </span>
           <span className="text-[15px] font-semibold tracking-tight">EngageFlow <span className="text-em-300">AI</span></span>
         </a>
@@ -257,9 +257,8 @@ export function Footer() {
         <div className="grid md:grid-cols-12 gap-8">
           <div className="md:col-span-4">
             <a href="#" className="flex items-center gap-2.5">
-              <span className="relative w-7 h-7 rounded-lg grid place-items-center"
-                    style={{ background: 'linear-gradient(135deg, #10b981, #8b5cf6)' }}>
-                <Sparkles size={14} className="text-ink-950"/>
+              <span className="relative w-7 h-7 rounded-lg overflow-hidden bg-white grid place-items-center shrink-0">
+                <img src="/logo.png" alt="EngageFlow" className="w-6 h-6 object-contain" />
               </span>
               <span className="text-[15px] font-semibold tracking-tight">EngageFlow <span className="text-em-300">AI</span></span>
             </a>

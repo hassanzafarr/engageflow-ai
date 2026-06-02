@@ -5,6 +5,7 @@ import { FeedScanner } from './feed-scanner.jsx';
 import { VoiceProfile } from './voice-profile.jsx';
 import { Composer } from './composer.jsx';
 import { FeaturesGrid } from './features.jsx';
+import { TripleVariant } from './triple-variant.jsx';
 import { Scheduler } from './scheduler.jsx';
 import { useTweaks, TweaksPanel, TweakSection, TweakSlider, TweakToggle, TweakRadio } from './tweaks-panel.jsx';
 
@@ -59,6 +60,7 @@ function App() {
       <ErrorBoundary><VoiceProfile /></ErrorBoundary>
       <ErrorBoundary><Composer /></ErrorBoundary>
       <ErrorBoundary><FeaturesGrid /></ErrorBoundary>
+      <ErrorBoundary><TripleVariant /></ErrorBoundary>
       <ErrorBoundary><Scheduler /></ErrorBoundary>
       <ErrorBoundary><Testimonials /></ErrorBoundary>
       <ErrorBoundary><FAQ /></ErrorBoundary>

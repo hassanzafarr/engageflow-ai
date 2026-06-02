@@ -4,10 +4,10 @@ import { ThumbsUp, ThumbsDown, Smile, MessageCircle, Sparkles, Repeat, Settings,
 import { SectionHead, Reveal, Pill } from './ui.jsx';
 
 const INTENTS = [
-  { id: 'agree',    label: 'Agree',    icon: ThumbsUp,       accent: '#10b981' },
-  { id: 'disagree', label: 'Disagree', icon: ThumbsDown,     accent: '#8b5cf6' },
-  { id: 'funny',    label: 'Funny',    icon: Smile,          accent: '#fbbf24' },
-  { id: 'question', label: 'Question', icon: MessageCircle,  accent: '#60a5fa' },
+  { id: 'add_value',    label: 'Add Value',   icon: ThumbsUp,      accent: '#10b981' },
+  { id: 'offer_alt',    label: 'Offer Alt.',  icon: ThumbsDown,    accent: '#8b5cf6' },
+  { id: 'funny',        label: 'Funny',       icon: Smile,         accent: '#fbbf24' },
+  { id: 'ask_question', label: 'Ask Question',icon: MessageCircle, accent: '#60a5fa' },
 ];
 
 const LENGTHS = [
@@ -24,30 +24,30 @@ const ORIGINAL_POST = {
 };
 
 const REPLIES = {
-  agree: {
-    short:  "Specification is the new prompt. The teams who win the next two years are the ones who can write a ticket so clean you could hand it to a junior or a model and get the same result.",
-    medium: "Specification is the new prompt. The teams who win the next two years are the ones who can write a ticket so clean you could hand it to a junior or a model and get the same result. Most orgs aren't optimized for that — they reward verbal context, not written. Worth re-tooling now.",
-    long:   "Specification is the new prompt. The teams who win the next two years are the ones who can write a ticket so clean you could hand it to a junior or a model and get the same result. Most orgs aren't optimized for that — they reward verbal context, not written. Worth re-tooling now. The interesting second-order effect: clarity of spec exposes which decisions never had owners. Half of \"prompt engineering\" today is just paying down that debt. Once it's paid, the model + a competent thinker is honestly enough."
+  add_value: {
+    short:  "Specification is the new leverage. The person who can write a requirement so tight that any intelligent system — human or model — can execute it without back-and-forth is worth ten prompt wizards.",
+    medium: "Specification is the new leverage. The person who can write a requirement so tight that any intelligent system — human or model — can execute it without back-and-forth is worth ten prompt wizards. Most orgs don't train for this because they've always relied on verbal handoffs. That's the real gap to close.",
+    long:   "Specification is the new leverage. The person who can write a requirement so tight that any intelligent system — human or model — can execute it without back-and-forth is worth ten prompt wizards. Most orgs don't train for this because they've always relied on verbal handoffs. That's the real gap to close. The second-order effect: good specs surface which decisions still have no owner. You can't specify what hasn't been decided — and 'just ask the AI' lets that ambiguity hide longer than it should."
   },
-  disagree: {
-    short:  "Push back on this. Specification is harder than prompt-engineering, not easier — and far fewer people are good at it. The bottleneck moves, but it doesn't shrink.",
-    medium: "Push back on this. Specification is harder than prompt-engineering, not easier — and far fewer people are good at it. The bottleneck moves, but it doesn't shrink. \"Thinking clearly\" is the rarest skill in any org; we just don't measure for it because every job posting asks for years of tools.",
-    long:   "Push back on this. Specification is harder than prompt-engineering, not easier — and far fewer people are good at it. The bottleneck moves, but it doesn't shrink. \"Thinking clearly\" is the rarest skill in any org; we just don't measure for it because every job posting asks for years of tools. Also worth saying: spec-first only works when the cost of being wrong is low. For anything irreversible (pricing, hiring, infra cutovers) you still want the messy back-and-forth a sharp engineer brings. The model accelerates a band of work, not all of it."
+  offer_alt: {
+    short:  "Counterpoint: spec clarity is harder to develop than prompt fluency, and far rarer. The bottleneck moves — it doesn't shrink.",
+    medium: "Counterpoint: spec clarity is harder to develop than prompt fluency, and far rarer. The bottleneck moves — it doesn't shrink. \"Thinking clearly\" is the scarcest skill in most orgs; we just don't measure for it because every JD asks for tool years instead.",
+    long:   "Counterpoint: spec clarity is harder to develop than prompt fluency, and far rarer. The bottleneck moves — it doesn't shrink. \"Thinking clearly\" is the scarcest skill in most orgs; we just don't measure for it because every JD asks for tool years instead. Also worth noting: spec-first only works when the cost of being wrong is low. For irreversible decisions — pricing, infra cutovers, hiring — you still want the messy back-and-forth a sharp engineer brings. The model accelerates a band of work, not all of it."
   },
   funny: {
     short:  "every PM I've worked with for ten years just felt a great disturbance in the force, as if their job title was suddenly worth $40k more.",
     medium: "every PM I've worked with for ten years just felt a great disturbance in the force, as if their job title was suddenly worth $40k more. meanwhile the prompt engineering bootcamp grads are checking the return policy on their merch.",
     long:   "every PM I've worked with for ten years just felt a great disturbance in the force, as if their job title was suddenly worth $40k more. meanwhile the prompt engineering bootcamp grads are checking the return policy on their merch. somewhere a CTO is workshopping the LinkedIn post where he discovers 'requirements documents' for the first time and presents it as a paradigm shift. can't wait to hear the keynote."
   },
-  question: {
-    short:  "Genuine question — when you say \"think clearly,\" what's the actual artifact you imagine that person producing? A doc? A graph? A test set? Curious what shape the new bottleneck is.",
-    medium: "Genuine question — when you say \"think clearly,\" what's the actual artifact you imagine that person producing? A doc? A graph? A test set? I keep seeing the spec-first claim and wanting to know what \"spec\" concretely means in your team. Word count? Structure? Eval coverage?",
-    long:   "Genuine question — when you say \"think clearly,\" what's the actual artifact you imagine that person producing? A doc? A graph? A test set? I keep seeing the spec-first claim and wanting to know what \"spec\" concretely means in your team. Word count? Structure? Eval coverage? Also: who reviews it? If specs are the new code, then code review is the new… spec review, presumably. Have you formalized that loop, or is it still ad hoc?"
+  ask_question: {
+    short:  "What does 'thinking clearly' produce in your workflow — a doc, a decision log, a test set? Genuinely want to know what the artifact looks like.",
+    medium: "What does 'thinking clearly' produce in your workflow — a doc, a decision log, a test set? Genuinely want to know what the artifact looks like. Because if we can't name the output, we can't hire for it or teach it — which is the same problem prompt engineering had.",
+    long:   "What does 'thinking clearly' produce in your workflow — a doc, a decision log, a test set? Genuinely want to know what the artifact looks like. Because if we can't name the output, we can't hire for it or teach it — which is the same problem prompt engineering had. Also: who reviews the spec? If specs are the new code, there should be a spec-review loop. Have you formalized that, or is it still 'the senior person does a vibe check'?"
   }
 };
 
 export function Composer() {
-  const [intent, setIntent] = React.useState('agree');
+  const [intent, setIntent] = React.useState('add_value');
   const [length, setLength] = React.useState('medium');
   const [phase, setPhase] = React.useState('idle');
   const [typed, setTyped] = React.useState('');
