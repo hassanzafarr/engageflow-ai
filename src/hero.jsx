@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { Sparkles, Check, Repeat, Send, Bolt, Activity, Mic, ArrowRight, Chrome, Play, Shield, Lock, Zap, Linkedin, Xtwitter } from './icons.jsx';
 import { Reveal, GlowButton, GhostButton, Pill } from './ui.jsx';
 import { Particles } from './particles.jsx';
+import { CHROME_STORE_URL } from './links.js';
 
 function FloatingWidget({ children, className = '', float = { y: 8, x: 4, dur: 6, delay: 0 }, rotate = 0 }) {
   return (
@@ -169,7 +170,7 @@ export function Hero({ particleDensity }) {
 
           <Reveal y={14} delay={0.32}>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <GlowButton variant="em" className="px-6 py-3 text-[15px]" as="a" href="#pricing">
+              <GlowButton variant="em" className="px-6 py-3 text-[15px]" as="a" href={CHROME_STORE_URL} target="_blank" rel="noopener noreferrer">
                 <Chrome size={16}/> Install Chrome Extension
                 <span className="ml-1 text-[11px] font-mono text-em-700/80 bg-em-300/20 px-1.5 py-0.5 rounded">Free</span>
               </GlowButton>

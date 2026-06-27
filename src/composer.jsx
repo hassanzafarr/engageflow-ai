@@ -11,9 +11,9 @@ const INTENTS = [
 ];
 
 const LENGTHS = [
-  { id: 'short',  label: 'Short',  chars: 140, ring: 0.35 },
-  { id: 'medium', label: 'Medium', chars: 280, ring: 0.62 },
-  { id: 'long',   label: 'Long',   chars: 480, ring: 0.92 },
+  { id: 'short',  label: 'Short',  chars: 80, ring: 0.25 },
+  { id: 'medium', label: 'Medium', chars: 160, ring: 0.45 },
+  { id: 'long',   label: 'Long',   chars: 300, ring: 0.72 },
 ];
 
 const ORIGINAL_POST = {
@@ -48,7 +48,7 @@ const REPLIES = {
 
 export function Composer() {
   const [intent, setIntent] = React.useState('add_value');
-  const [length, setLength] = React.useState('medium');
+  const [length, setLength] = React.useState('short');
   const [phase, setPhase] = React.useState('idle');
   const [typed, setTyped] = React.useState('');
   const [ringProgress, setRingProgress] = React.useState(0);

@@ -2,10 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Sparkles, Github, Chrome, Quote, Plus, ArrowRight, Xtwitter, Linkedin, Menu, X } from './icons.jsx';
 import { GlowButton, GhostButton, Pill, Reveal, SectionHead } from './ui.jsx';
-
-// Update these when the Chrome extension and GitHub repo are live
-const GITHUB_URL = 'https://github.com/hassanzafar619/engageflow-ai';
-const CHROME_STORE_URL = '#pricing';
+import { CHROME_STORE_URL, GITHUB_URL } from './links.js';
 
 export function Nav() {
   const { scrollY } = useScroll();
@@ -44,7 +41,7 @@ export function Nav() {
              className="hidden sm:inline-flex items-center gap-1.5 text-[12.5px] text-white/65 hover:text-white px-3 py-1.5 transition">
             <Github size={14}/> Source
           </a>
-          <GlowButton variant="em" className="hidden sm:inline-flex px-4 py-2 text-[13px]" as="a" href={CHROME_STORE_URL}>
+          <GlowButton variant="em" className="hidden sm:inline-flex px-4 py-2 text-[13px]" as="a" href={CHROME_STORE_URL} target="_blank" rel="noopener noreferrer">
             <Chrome size={14}/>Add to Chrome
           </GlowButton>
           <button
@@ -75,7 +72,7 @@ export function Nav() {
                 </a>
               ))}
               <div className="pt-2 pb-1 flex flex-col gap-2">
-                <GlowButton variant="em" className="w-full justify-center py-2.5 text-[13px]" as="a" href={CHROME_STORE_URL}>
+                <GlowButton variant="em" className="w-full justify-center py-2.5 text-[13px]" as="a" href={CHROME_STORE_URL} target="_blank" rel="noopener noreferrer">
                   <Chrome size={14}/>Add to Chrome
                 </GlowButton>
                 <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer"
@@ -220,7 +217,7 @@ export function PricingCTA() {
 
         <Reveal delay={0.2}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
-            <GlowButton variant="em" className="px-7 py-3.5 text-[15px]" as="a" href={CHROME_STORE_URL}>
+            <GlowButton variant="em" className="px-7 py-3.5 text-[15px]" as="a" href={CHROME_STORE_URL} target="_blank" rel="noopener noreferrer">
               <Chrome size={16}/> Install Chrome Extension
               <ArrowRight size={14} className="ml-1"/>
             </GlowButton>
